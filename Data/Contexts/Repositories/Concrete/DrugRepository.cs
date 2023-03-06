@@ -52,5 +52,10 @@ namespace Data.Contexts.Repositories.Concrete
         {
             DbContext.Drugs.Remove(drug);
         }
+
+        public List<Drug> Filter(decimal price)
+        {
+            return DbContext.Drugs.Where(d => d.Price < price).ToList();
+        }
     }
 }

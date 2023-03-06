@@ -17,10 +17,7 @@ namespace Data.Contexts.Repositories.Concrete
         {
             return DbContext.Owners;
         }
-        public Owner GetByName(string name)
-        {
-            return DbContext.Owners.FirstOrDefault(o => o.Name.ToLower() == name.ToLower());
-        }
+       
         public Owner Get(int id)
         {
             return DbContext.Owners.FirstOrDefault(o => o.Id == id);

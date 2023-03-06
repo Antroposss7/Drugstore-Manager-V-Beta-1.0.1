@@ -12,7 +12,9 @@ namespace Core.Constants
         Drugstores,
         Druggists,
         Drugs,
-        Logout
+        Logout,
+        Exit,
+        
 
     }
 }

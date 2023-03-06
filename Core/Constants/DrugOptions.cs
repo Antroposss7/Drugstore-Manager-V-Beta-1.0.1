@@ -8,13 +8,13 @@ namespace Core.Constants
 {
     public enum DrugOptions
     {
-        BackToMainMenu,
         CreateDrug,
         UpdateDrug,
         DeleteDrug,
         GetAllDrugs,
         GetAllDrugsByDrugstore,
-        FilterDrugs
+        FilterDrugs,
+        MainMenu,
 
     }
 }

@@ -8,12 +8,12 @@ namespace Core.Constants
 {
     public enum DruggistOptions
     {
-        GoToMainMenu,
         CreateDruggist,
         UpdateDruggist,
         Delete,
         GetAllDruggists,
-        GetAllDruggistsByDrugstore
+        GetAllDruggistsByDrugstore,
+        MainMenu
 
     }
 }

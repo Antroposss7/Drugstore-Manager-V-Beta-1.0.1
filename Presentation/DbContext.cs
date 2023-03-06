@@ -12,9 +12,9 @@ namespace Data.Contexts
         static DbContext()
         {
             Owners = new List<Owner>();
-            Drugs = new List<Drug>();
             Drugstores = new List<Drugstore>();
             Druggists = new List<Druggist>();
+            Drugs = new List<Drug>();
             Admins = new List<Admin>();
         }
         public static List<Owner> Owners { get; set; }

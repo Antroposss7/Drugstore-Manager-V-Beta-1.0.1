@@ -14,374 +14,400 @@ namespace Presentation.Services
 {
     public class MenuServices
     {
-        private readonly static OwnerService1 _ownerService;
-        private readonly static AdminService1 _adminService;
+        private readonly static OwnerService _ownerService;
+        private readonly static AdminService _adminService;
         private readonly static DrugstoreService _drugstoreService;
+        private readonly static DrugService _drugService;
+        private readonly static DruggistService _druggistService;
         private static Admin admin;
 
         static MenuServices()
         {
             DbInitializer.SeedAdmins();
             _drugstoreService = new DrugstoreService(admin);
-            _adminService = new AdminService1();
-            _ownerService = new OwnerService1(admin);
-
+            _adminService = new AdminService();
+            _ownerService = new OwnerService(admin);
+            _drugService = new DrugService();
+            _druggistService = new DruggistService();
 
             Array myArray = Enum.GetValues(typeof(MainMenuOptions));
             Console.OutputEncoding = Encoding.UTF8;
-
-
-
         }
-
-        public void MainMenu()
+        public void MainMenu() ///////////////////// MAIN MENU
         {
-
-
-
+            Console.Clear();
             while (true)
             {
 
                 string[] menuOptions = Enum.GetNames(typeof(MainMenuOptions));
                 int ownerMenuSelect = 0;
-                var num = 1; // поменять на смайлики! 
+                var num = 1; 
+                menuOptions[0] = "👤|Owners    | ";
+                menuOptions[1] = "🏥|Drugstores|  ";
+                menuOptions[2] = "‍⚕️|Druggists |  ";
+                menuOptions[3] = "💊|Drugs     | ";
+                menuOptions[4] = "❎|Logout    |  ";
+                menuOptions[5] = "❌|Exit      |  ";
 
 
-                while (true)
+                Console.Clear();
+                var newMenu = new MenuRepository(menuOptions, 1, 1);
+
+                newMenu.ModifyMenuCentered();
+                newMenu.CenterMenuToConsole();
+                newMenu.ResetCursorVisible();
+                int selection = 0;
+
+              
+                while (selection != 5) 
                 {
-                    Console.Clear();
-                    Console.CursorVisible = false;
+                    selection = newMenu.RunMenu();
 
-                    ConsoleHelper.WriteWithColor("Hello and welcome! Please choose type of registration:",
-                        ConsoleColor.DarkMagenta);
-
-                    for (int i = 0; i < menuOptions.Length; i++)
+                    Console.WriteLine(menuOptions[selection] + "                   ");
+                    newMenu.ResetCursorVisible();
+                    switch (selection)
                     {
-
-                        ConsoleHelper.WriteWithColor(
-                            (i == ownerMenuSelect ? $"|[{num}]" : "") + menuOptions[i] +
-                            (i == ownerMenuSelect ? "|" : ""), ConsoleColor.Blue);
-
-                    }
-
-                    var keyPressed = Console.ReadKey();
-
-                    if (keyPressed.Key == ConsoleKey.DownArrow && ownerMenuSelect != menuOptions.Length - 1)
-                    {
-                        Console.Beep();
-                        ownerMenuSelect++;
-                        num++;
-                    }
-                    else if (keyPressed.Key == ConsoleKey.UpArrow && ownerMenuSelect >= 1)
-                    {
-                        Console.Beep();
-                        ownerMenuSelect--;
-                        num--;
-                    }
-                    else if (keyPressed.Key == ConsoleKey.Enter)
-                    {
-                        switch (ownerMenuSelect)
-                        {
-                            case 0:
-                                Console.Clear();
+                        case 0:
+                            {
                                 OwnerMenu();
                                 break;
-                            case 1:
-                                Console.Clear();
+                            }
+                        case 1:
+                            {
                                 DrugStoreMenu();
                                 break;
-                            case 2:
+                            }
+                        case 2:
+                            {
+
+                                DruggistMenu();
                                 break;
-                            case 3:
+                            }
+
+                        case 3:
+                            {
+                                DrugMenu();
                                 break;
-                            case 4:
+                            }
+                        case 4:
+                            {
                                 Console.Clear();
-                                Console.CursorVisible = true;
                                 _adminService.Authorize();
                                 break;
-
-
-
-
-
-                        }
-
+                            }
+                        case 5:
+                            {
+                                Environment.Exit(0);
+                                break;
+                            }
                     }
-
-
-
                 }
-
             }
         }
 
-        public void OwnerMenu()
+
+        public void OwnerMenu() ////////////////////////////// OWNER MENU
         {
 
-            while (true)
-            {
+            Console.Clear();
+            string[] menuOptions = Enum.GetNames(typeof(OwnerOptions));
+            menuOptions[0] = "|Create Owner|";
+            menuOptions[1] = "|Update Owner|";
+            menuOptions[2] = "‍|Delete Owner| ";
+            menuOptions[3] = "|Get All Owners|";
+            menuOptions[4] = "|Main Menu|";
+            
+            int ownerMenuSelect = 0;
+            var num = 1; 
 
-                string[] menuOptions = Enum.GetNames(typeof(OwnerOptions));
-                int menuSelect = 0;
-                int menuNum = 1;
-                while (true)
+            Console.Clear();
+            var newMenu = new MenuRepository(menuOptions, 1, 1);
+
+            newMenu.ModifyMenuCentered();
+            newMenu.CenterMenuToConsole();
+            newMenu.ResetCursorVisible();
+            int selection = 0;
+
+            
+            while (selection != 3)
+            {
+                selection = newMenu.RunMenu();
+
+                Console.WriteLine(menuOptions[selection] + "                   ");
+                newMenu.ResetCursorVisible();
+                switch (selection)
                 {
-
-                    Console.Clear();
-                    Console.CursorVisible = false;
-                    ConsoleHelper.WriteWithColor("Owner Options", ConsoleColor.Magenta);
-                    ConsoleHelper.WriteWithColor("-------------", ConsoleColor.DarkMagenta);
-
-
-                    for (int i = 0; i < menuOptions.Length; i++)
-
-                    {
-
-                        ConsoleHelper.WriteWithColor(
-                            (i == menuSelect ? $"=============================➡️[{menuNum}]" : "") + menuOptions[i] +
-                            (i == menuSelect ? "◀️=============================" : ""), ConsoleColor.Blue);
-
-                    }
-
-                    var keyPressed = Console.ReadKey();
-
-                    if (keyPressed.Key == ConsoleKey.DownArrow && menuSelect != menuOptions.Length - 1)
-                    {
-                        Console.Beep();
-                        menuSelect++;
-                        menuNum++;
-                    }
-                    else if (keyPressed.Key == ConsoleKey.UpArrow && menuSelect >= 1)
-                    {
-                        Console.Beep();
-                        menuSelect--;
-                        menuNum--;
-                    }
-                    else if (keyPressed.Key == ConsoleKey.Enter)
-                    {
-                        switch (menuSelect)
+                    case 0:
                         {
-                            case 0:
-                                Console.Clear();
-                                Console.Beep();
-                                _ownerService.Create();
-
-                                break;
-                            case 1:
-                                Console.Clear();
-                                Console.Beep();
-                                _ownerService.Update();
-                                break;
-
-                            case 2:
-                                Console.Clear();
-                                Console.Beep();
-                                _ownerService.Delete();
-                                break;
-                            case 3:
-                                Console.Clear();
-                                Console.Beep();
-                                _ownerService.GetAll();
-                                break;
-                            case 4:
-                                MainMenu();
-                                break;
+                            Console.Clear();
+                            _ownerService.Create();
+                            break;
                         }
-                    }
+                    case 1:
+                        {
+                            Console.Clear();
+                            _ownerService.Update();
+                            break;
+                        }
+                    case 2:
+                        {
+                            Console.Clear();
+                            _ownerService.Delete();
+                            break;
+                        }
 
-
-
+                    case 3:
+                        {
+                            Console.Clear();
+                            _ownerService.GetAll();
+                            break;
+                        }
+                    case 4:
+                        {
+                            Console.Clear();
+                            MainMenu();
+                            break;
+                        }
                 }
-
             }
         }
 
-        public void DrugStoreMenu()
+        public void DrugStoreMenu() /////////////////////////////// DRUGSTORE MENU (OLD)
 
         {
             while (true)
             {
-
+                Console.Clear();
                 string[] menuOptions = Enum.GetNames(typeof(DrugstoreOptions));
-                int menuSelect = 0;
-                int menuNum = 1;
-                while (true)
+                menuOptions[0] = "|Create Drugstore|";
+                menuOptions[1] = "|Update Drugstore|";
+                menuOptions[2] = "‍|Delete Drugstore| ";
+                menuOptions[3] = "|All Drugstores  |";
+                menuOptions[4] = "|Drugstores by Owner|";
+                menuOptions[5] = "|Sale| ";
+                menuOptions[6] = "|Main Menu|";
+
+
+                int ownerMenuSelect = 0;
+                var num = 1; 
+                Console.Clear();
+                var newMenu = new MenuRepository(menuOptions, 1, 1);
+
+                newMenu.ModifyMenuCentered();
+                newMenu.CenterMenuToConsole();
+                newMenu.ResetCursorVisible();
+                int selection = 0;
+
+                //
+                while (selection != 3)
                 {
+                    selection = newMenu.RunMenu();
 
-                    Console.Clear();
-                    Console.CursorVisible = false;
-                    ConsoleHelper.WriteWithColor("Drugstore Options", ConsoleColor.Magenta);
-                    ConsoleHelper.WriteWithColor("-----------------", ConsoleColor.DarkMagenta);
-
-                    for (int i = 0; i < menuOptions.Length; i++)
-
+                    Console.WriteLine(menuOptions[selection] + "                   ");
+                    newMenu.ResetCursorVisible();
+                    switch (selection)
                     {
-
-                        ConsoleHelper.WriteWithColor(
-                            (i == menuSelect ? $"=========================>[{menuNum}]" : "") + menuOptions[i] +
-                            (i == menuSelect ? "<=========================" : ""), ConsoleColor.Blue);
-
-                    }
-
-                    var keyPressed = Console.ReadKey();
-
-                    if (keyPressed.Key == ConsoleKey.DownArrow && menuSelect != menuOptions.Length - 1)
-                    {
-                        Console.Beep();
-                        menuSelect++;
-                        menuNum++;
-                    }
-                    else if (keyPressed.Key == ConsoleKey.UpArrow && menuSelect >= 1)
-                    {
-                        Console.Beep();
-                        menuSelect--;
-                        menuNum--;
-                    }
-                    else if (keyPressed.Key == ConsoleKey.Enter)
-                    {
-                        switch (menuSelect)
-                        {
-                            case 0:
-                                Console.Beep();
+                        case 0:
+                            {
                                 Console.Clear();
                                 _drugstoreService.Create();
-                                //add exc
                                 break;
-                            case 1:
-                                Console.Beep();
+                            }
+                        case 1:
+                            {
                                 Console.Clear();
                                 _drugstoreService.Update();
-                                //need check and add exc
                                 break;
-
-                            case 2:
-                                Console.Beep();
+                            }
+                        case 2:
+                            {
                                 Console.Clear();
                                 _drugstoreService.Delete();
-                                //need check
                                 break;
-                            case 3:
-                                Console.Beep();
+                            }
+
+                        case 3:
+                            {
                                 Console.Clear();
                                 _drugstoreService.GetAll();
                                 break;
-                            case 4:
-                                Console.Beep();
+                            }
+                        case 4:
+                            {
                                 Console.Clear();
                                 _drugstoreService.GetAllDrugStoresByOwner();
-                                //need check and add ext
                                 break;
-                            case 5:
-                                Console.Beep();
+                            }
+                        case 5:
+                            {
                                 Console.Clear();
                                 _drugstoreService.Sale();
-                                //go back here after Sale 
                                 break;
-                            case 6:
+                            }
+                        case 6:
+                            {
+                                Console.Clear();
                                 MainMenu();
                                 break;
-                            case 7:
-                                Console.Beep();
-                                Console.Clear();
-                                Console.CursorVisible = true;
-                                _adminService.Authorize();
-                                break;
-                        }
+                            }
                     }
                 }
             }
         }
 
-        public void Drug()
-        {
+
+
+
+        public void DrugMenu()
+        {///////////////////////////////////////// DRUG MENU (OLD)
+
             while (true)
             {
 
                 string[] menuOptions = Enum.GetNames(typeof(DrugOptions));
-                int menuSelect = 0;
-                int menuNum = 1;
-                while (true)
+                menuOptions[0] = "|Create Drug| ";
+                menuOptions[1] = "|Update Drug| ";
+                menuOptions[2] = "‍|Delete Drug|  ";
+                menuOptions[3] = "| All Drugs | ";
+                menuOptions[4] = "|Drugs by Drugstore|";
+                menuOptions[5] = "|Filter Drugs|  ";
+                menuOptions[6] = "|Main Menu|";
+                int ownerMenuSelect = 0;
+                var num = 1; 
+                Console.Clear();
+                var newMenu = new MenuRepository(menuOptions, 1, 1);
+
+                newMenu.ModifyMenuCentered();
+                newMenu.CenterMenuToConsole();
+                newMenu.ResetCursorVisible();
+                int selection = 0;
+
+                
+                while (selection != 3)      
                 {
+                    selection = newMenu.RunMenu();
 
-                    Console.Clear();
-                    Console.CursorVisible = false;
-                    ConsoleHelper.WriteWithColor("Drugstore Options", ConsoleColor.Magenta);
-                    ConsoleHelper.WriteWithColor("-----------------", ConsoleColor.DarkMagenta);
-
-                    for (int i = 0; i < menuOptions.Length; i++)
-
+                    Console.WriteLine(menuOptions[selection] + "                   ");
+                    newMenu.ResetCursorVisible();
+                    switch (selection)
                     {
+                        case 0:
+                            {
+                                Console.Clear();
+                                _drugService.Create();
+                                break;
+                            }
+                        case 1:
+                            {
+                                Console.Clear();
+                                _drugService.Update();
+                                break;
+                            }
+                        case 2:
+                            {
+                                Console.Clear();
+                                _drugService.Delete();
+                                break;
+                            }
 
-                        ConsoleHelper.WriteWithColor(
-                            (i == menuSelect ? $"=========================>[{menuNum}]" : "") + menuOptions[i] +
-                            (i == menuSelect ? "<=========================" : ""), ConsoleColor.Blue);
-
-                    }
-
-                    var keyPressed = Console.ReadKey();
-
-                    if (keyPressed.Key == ConsoleKey.DownArrow && menuSelect != menuOptions.Length - 1)
-                    {
-                        Console.Beep();
-                        menuSelect++;
-                        menuNum++;
-                    }
-                    else if (keyPressed.Key == ConsoleKey.UpArrow && menuSelect >= 1)
-                    {
-                        Console.Beep();
-                        menuSelect--;
-                        menuNum--;
-                    }
-                    else if (keyPressed.Key == ConsoleKey.Enter)
-                    {
-                        switch (menuSelect)
-                        {
-                            case 0:
-                                Console.Beep();
+                        case 3:
+                            {
                                 Console.Clear();
-                                _drugstoreService.Create();
-                                //add exc
+                                _drugService.GetAll();
                                 break;
-                            case 1:
-                                Console.Beep();
+                            }
+                        case 4:
+                            {
                                 Console.Clear();
-                                _drugstoreService.Update();
-                                //need check and add exc
+                                _drugService.GetAllDrugsByDrugstore();
                                 break;
-
-                            case 2:
-                                Console.Beep();
+                            }
+                        case 5:
+                            {
                                 Console.Clear();
-                                _drugstoreService.Delete();
-                                //need check
+                                _drugService.FilterDrugs();
                                 break;
-                            case 3:
-                                Console.Beep();
+                            }
+                        case 6:
+                            {
                                 Console.Clear();
-                                _drugstoreService.GetAll();
-                                break;
-                            case 4:
-                                Console.Beep();
-                                Console.Clear();
-                                _drugstoreService.GetAllDrugStoresByOwner();
-                                //need check and add ext
-                                break;
-                            case 5:
-                                Console.Beep();
-                                Console.Clear();
-                                _drugstoreService.Sale();
-                                //go back here after Sale 
-                                break;
-                            case 6:
                                 MainMenu();
                                 break;
-                            case 7:
-                                Console.Beep();
+                            }
+                    }
+                }
+            }
+        }
+        public void DruggistMenu() //////////////////////////////  DRUGGIST MENU (OLD)
+        {
+            while (true)
+            {
+
+                string[] menuOptions = Enum.GetNames(typeof(DruggistOptions));
+                menuOptions[0] = "|Create Druggist|";
+                menuOptions[1] = "|Update Druggist|";
+                menuOptions[2] = "‍|Delete Druggist| ";
+                menuOptions[3] = "| All Druggists |";
+                menuOptions[4] = "|Druggists by Drug Store|";
+                menuOptions[5] = "|Main Menu|";
+
+                int ownerMenuSelect = 0;
+                var num = 1; 
+                Console.Clear();
+                var newMenu = new MenuRepository(menuOptions, 1, 1);
+
+                newMenu.ModifyMenuCentered();
+                newMenu.CenterMenuToConsole();
+                newMenu.ResetCursorVisible();
+                int selection = 0;
+
+                // this is a good place to use a switch statement for options
+                while (selection != 3)      // make this your exit case
+                {
+                    selection = newMenu.RunMenu();
+
+                    Console.WriteLine(menuOptions[selection] + "                   ");
+                    newMenu.ResetCursorVisible();
+                    switch (selection)
+                    {
+                        case 0:
+                            {
                                 Console.Clear();
-                                Console.CursorVisible = true;
-                                _adminService.Authorize();
+                                _druggistService.Create();
                                 break;
-                        }
+                            }
+                        case 1:
+                            {
+                                Console.Clear();
+                                _druggistService.Update();
+                                break;
+                            }
+                        case 2:
+                            {
+                                Console.Clear();
+                                _druggistService.Delete();
+                                break;
+                            }
+
+                        case 3:
+                            {
+                                Console.Clear();
+                                _druggistService.GetAll();
+                                break;
+                            }
+                        case 4:
+                            {
+                                Console.Clear();
+                                _druggistService.GetAllDruggistsByDrugstore();
+                                break;
+                            }
+                        case 5:
+                            {
+                                Console.Clear();
+                                MainMenu();
+                                break;
+                            }
+                        
 
                     }
                 }
@@ -389,3 +415,29 @@ namespace Presentation.Services
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

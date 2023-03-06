@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -21,8 +22,12 @@ namespace Core.Helpers
         public static void WriteWithColor(string text, ConsoleColor color = ConsoleColor.White)
         {
             Console.ForegroundColor = color;
-            Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (text.Length / 2)) + "}", text));
+            int leftPadding = (Console.WindowWidth - text.Length) / 2;
+            Console.WriteLine(String.Format("{0}{1}", new string(' ', leftPadding), text));
             Console.ResetColor();
+            //Console.ForegroundColor = color;
+            //Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (text.Length / 2)) + "}", text));
+            //Console.ResetColor(); // old version!
         }
 
         public static void WriteWithCondition(string text, ConsoleColor color = ConsoleColor.White)
@@ -31,11 +36,15 @@ namespace Core.Helpers
             Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (text.Length / 2)) + "}", text));
             Console.ResetColor();
         }
+        
 
-       
     }
 
 }
+
+
+
+
 
 
 

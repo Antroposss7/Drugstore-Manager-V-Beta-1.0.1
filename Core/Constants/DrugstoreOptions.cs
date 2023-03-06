@@ -14,8 +14,8 @@ namespace Core.Constants
         Get_All_Drugstores,
         Get_All_Drugstores_By_Owner,
         Sale,
-        Back_To_Main_Menu,
-        Logout
+        Main_Menu
+        
 
     }
 

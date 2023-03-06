@@ -19,7 +19,10 @@ namespace Data.Contexts.Repositories.Concrete
         {
             return DbContext.Drugstores.Where(o => o.Owner.Id == id).ToList();
         }
-        public List<Drug> Sale(int id)
+
+       
+        
+        public List<Drug> Sale(int id) //+
         {
             return DbContext.Drugs.Where(s => s.Drugstore.Id == id).ToList();
         }
@@ -54,6 +57,7 @@ namespace Data.Contexts.Repositories.Concrete
         {
             return DbContext.Drugstores.Any(s => s.Email == email);
         }
+
     }
 }
     
